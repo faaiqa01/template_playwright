@@ -53,6 +53,7 @@ Sebelum mulai development:
 - Hapus semua file contoh bawaan template (mis. `tests/example.spec.ts`).
 - Ganti data/fixture contoh dengan data project nyata, atau hapus jika tidak dipakai.
 - Jangan tinggalkan test/fixture bernama "example", "sample", atau "template".
+- Wajib bersihkan semua file contoh di `tests/` termasuk subfolder `e2e/`, `integration/`, dan `unit/` sebelum menulis test baru.
 
 ---
 
