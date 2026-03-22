@@ -25,6 +25,10 @@ project-root/
 │   ├── utils/           # Utility functions
 │   └── tests/           # Test files
 ├── tests/
+│   ├── helpers/         # Helper functions untuk test (WAJIB)
+│   │   ├── login.helper.ts      # Login helper (WAJIB digunakan di beforeEach)
+│   │   ├── auth.setup.ts        # Authentication setup untuk storage state
+│   │   └── index.ts             # Central export untuk semua helpers
 │   ├── e2e/            # End-to-end tests
 │   ├── integration/    # Integration tests
 │   └── unit/           # Unit tests
@@ -144,6 +148,29 @@ const email = generateRandomEmail();
 const date = formatDate(new Date());
 ```
 
+### Login Helper (WAJIB)
+
+Semua test yang membutuhkan autentikasi HARUS menggunakan login helper:
+
+```typescript
+import { ensureLogin } from '../helpers';
+
+test.describe('Authenticated Tests', () => {
+    test.beforeEach(async ({ page }) => {
+        // ✅ BENAR - Menggunakan login helper
+        await ensureLogin(page, 'valid');
+    });
+
+    test('example test with login', async ({ page }) => {
+        // User sudah authenticated
+    });
+});
+```
+
+**Pengecualian**: Login helper TIDAK boleh digunakan untuk test scenario login itu sendiri (e.g., `login.spec.ts`).
+
+Lihat [`tests/example.spec.ts`](tests/example.spec.ts) untuk contoh lengkap.
+
 ### Environment Configuration
 
 Environment-specific configuration:
@@ -188,6 +215,7 @@ Project ini mengikuti best practices dari [`SOUL.md`](./SOUL.md):
 - ✅ Handle **error** dengan pesan yang jelas
 - ✅ Gunakan **TypeScript strict mode**
 - ✅ Follow **naming conventions**
+- ✅ Gunakan **login helper** untuk autentikasi di setiap test (kecuali test scenario login)
 
 ## 🔧 Configuration
 
