@@ -50,6 +50,23 @@ npm install
 npx playwright install
 ```
 
+## Template Cleanup (Wajib)
+
+Sebelum mulai development:
+- Hapus semua file contoh bawaan template (mis. `tests/example.spec.ts`).
+- Ganti data/fixture contoh dengan data project nyata, atau hapus jika tidak dipakai.
+- Jangan tinggalkan test/fixture bernama "example", "sample", atau "template".
+
+### Contoh prompt
+
+```
+Ikuti aturan di SOUL.md. Sebelum mulai, lakukan Template Cleanup: hapus file contoh bawaan template (mis. tests/example.spec.ts) dan bersihkan data/fixture contoh yang tidak dipakai.
+```
+
+```
+Baca SOUL.md dan patuhi semua aturan. Langkah pertama: Template Cleanup — hapus tests/example.spec.ts, lalu cek fixture yang masih "sample/example" dan hapus yang tidak dipakai. Setelah itu baru lanjut task utama.
+```
+
 ### Run Tests
 
 ```bash
@@ -249,3 +266,4 @@ ISC
 
 **Versi**: 1.0.0
 **Last Updated**: 2026-03-21
+
