@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { DashboardPage, LoginPage, HomePage } from '../../src/pages';
-import { getUserFixture } from '../../src/fixtures';
+import { DashboardPage, HomePage } from '../../src/pages';
 
 /**
  * Dashboard E2E Tests
@@ -15,19 +14,14 @@ import { getUserFixture } from '../../src/fixtures';
 
 test.describe('Dashboard', () => {
     let dashboardPage: DashboardPage;
-    let loginPage: LoginPage;
     let homePage: HomePage;
 
     test.beforeEach(async ({ page }) => {
         dashboardPage = new DashboardPage(page);
-        loginPage = new LoginPage(page);
         homePage = new HomePage(page);
 
-        // Login user sebelum setiap test
-        await loginPage.navigate();
-        const user = getUserFixture('valid');
-        await loginPage.performLogin(user.email, user.password);
-        await dashboardPage.verifyPage();
+        // Global auth session sudah dibuat di auth.setup.ts
+        await dashboardPage.navigate();
     });
 
     /**

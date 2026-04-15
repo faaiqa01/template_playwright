@@ -11,6 +11,10 @@ Template Playwright dengan arsitektur best practice untuk end-to-end testing. Fr
 - **Page Object Model** - Maintainable test code
 - **Test Data Management** - Separated fixtures
 - **Reusable Utilities** - Common helper functions
+- **Global Auth Session** - Login sekali via setup project + `storageState`
+- **Project-local RTK Binary** - Jalankan RTK dari folder project (tanpa install global)
+- **Playwright MCP (Project-local)** - MCP server khusus project untuk automation/debugging browser
+- **Context7 MCP (Project-local)** - MCP server untuk dokumentasi library/API terbaru
 
 ## 🏗️ Architecture
 
@@ -61,6 +65,14 @@ Sebelum mulai development:
 - Ganti data/fixture contoh dengan data project nyata, atau hapus jika tidak dipakai.
 - Jangan tinggalkan test/fixture bernama "example", "sample", atau "template".
 
+One-command cleanup:
+
+```bash
+npm run template:cleanup
+```
+
+Rule ID (SOUL): `SOUL-TEMPLATE-CLEANUP-001`
+
 ### Contoh prompt
 
 ```
@@ -89,6 +101,70 @@ npm run test:ui
 npm run test:headed
 ```
 
+### RTK (Project-Local)
+
+RTK di template ini dijalankan sebagai binary lokal project (Windows):
+
+- Lokasi binary: `rtk-x86_64-pc-windows-msvc/rtk.exe`
+- Tidak wajib install global ke system PATH
+- Gunakan script npm agar konsisten:
+
+```bash
+npm run rtk:version
+npm run rtk
+```
+
+Jika binary belum ada, download dari:
+- https://www.rtk-ai.app/
+
+Catatan:
+- Binary `.exe` hanya untuk Windows.
+- Untuk environment non-Windows, siapkan binary sesuai OS masing-masing.
+
+### Playwright MCP (Project-Local)
+
+Template ini menyediakan konfigurasi MCP project-local (Playwright + Context7):
+
+- File config: `mcp.playwright.json`
+- NPM script server: `npm run mcp:playwright`
+- NPM script server Context7: `npm run mcp:context7`
+- Menggunakan session login global: `playwright/.auth/user.json`
+
+Langkah penggunaan:
+
+1. Jalankan setup auth dulu (agar `storageState` tersedia):
+   ```bash
+   npm test
+   ```
+2. Jalankan MCP server:
+   ```bash
+   npm run mcp:playwright
+   npm run mcp:context7
+   ```
+3. Hubungkan client AI Anda menggunakan isi `mcp.playwright.json`
+   (file ini berisi server `playwright` dan `context7`).
+
+Referensi resmi:
+- https://github.com/microsoft/playwright-mcp
+- https://github.com/upstash/context7#installation
+
+Aturan penggunaan AI:
+- Gunakan **Playwright MCP** untuk task browser automation/UI.
+- Gunakan **Context7 MCP** untuk lookup dokumentasi library/API yang up-to-date.
+
+### Global Login Session
+
+Template ini menggunakan pola authenticated session global:
+
+- File setup: `tests/auth.setup.ts`
+- Session file: `playwright/.auth/user.json`
+- Setup project dijalankan otomatis lewat `dependencies` di `playwright.config.ts`
+- Test yang membutuhkan user login (contoh dashboard) tidak perlu login ulang di `beforeEach`
+
+Pengecualian penting:
+- Skenario login (`tests/e2e/login.spec.ts` dan sejenisnya) **tidak menggunakan session global**
+- Login scenario harus start dari state kosong agar flow login tervalidasi end-to-end
+
 ## 📝 Available Scripts
 
 | Command | Description |
@@ -104,6 +180,11 @@ npm run test:headed
 | `npm run test:chrome` | Run tests on Chrome only |
 | `npm run test:firefox` | Run tests on Firefox only |
 | `npm run test:webkit` | Run tests on WebKit only |
+| `npm run template:cleanup` | Remove template/sample/example files from test fixtures |
+| `npm run rtk` | Run RTK from local project binary (Windows) |
+| `npm run rtk:version` | Check RTK version from local binary |
+| `npm run mcp:context7` | Run Context7 MCP server for this project |
+| `npm run mcp:playwright` | Run Playwright MCP server for this project |
 | `npm run install:browsers` | Install all browser binaries |
 | `npm run codegen` | Generate test code with Playwright Inspector |
 
@@ -235,6 +316,7 @@ Edit [`playwright.config.ts`](./playwright.config.ts) untuk mengubah:
 - Timeout values
 - Browser configurations
 - Reporter settings
+- Auth setup project dan `storageState`
 
 ### TypeScript Config
 
@@ -293,5 +375,5 @@ ISC
 ---
 
 **Versi**: 1.0.0
-**Last Updated**: 2026-03-21
+**Last Updated**: 2026-04-15
 

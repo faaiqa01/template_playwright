@@ -10,7 +10,6 @@ src/
 │   └── env.config.ts # Environment configuration
 ├── fixtures/        # Test data and fixtures
 │   ├── user.fixture.ts    # User-related test data
-│   ├── product.fixture.ts # Product-related test data
 │   └── index.ts           # Central export
 ├── pages/           # Page Object Model classes
 │   ├── BasePage.ts        # Base class for all pages

@@ -15,6 +15,9 @@ import { validUser, invalidUser, getUserFixture } from '../../src/fixtures';
  */
 
 test.describe('Login Functionality', () => {
+    // Login scenarios harus berjalan tanpa authenticated session global
+    test.use({ storageState: { cookies: [], origins: [] } });
+
     let loginPage: LoginPage;
     let homePage: HomePage;
     let dashboardPage: DashboardPage;

@@ -54,6 +54,81 @@ project-root/
 
 ---
 
+## 🧹 Template Cleanup (Wajib)
+
+Sebelum mulai development:
+- Hapus semua file contoh bawaan template (mis. `tests/example.spec.ts`).
+- Ganti data/fixture contoh dengan data project nyata, atau hapus jika tidak dipakai.
+- Jangan tinggalkan test/fixture bernama "example", "sample", atau "template".
+
+Rule ID: `SOUL-TEMPLATE-CLEANUP-001`
+- Perintah standar: `npm run template:cleanup`
+- Jika user menyebut Rule ID ini, AI/agent harus menjalankan command cleanup tersebut terlebih dahulu.
+- Jalankan rule ini sebelum task utama saat repo masih mengandung file sample/example/template.
+
+## 🔐 Login Session Strategy (Wajib)
+
+Gunakan global authenticated session untuk test yang membutuhkan user sudah login:
+- Buat setup test khusus (contoh: `tests/auth.setup.ts`) untuk login sekali.
+- Simpan session ke `storageState` (contoh: `playwright/.auth/user.json`).
+- Konfigurasikan project browser dengan `dependencies: ['setup']` dan `use.storageState`.
+- Untuk test area authenticated (mis. dashboard/profile), jangan login ulang di `beforeEach`; langsung navigate ke halaman target.
+
+Pengecualian penting:
+- Test scenario login itu sendiri (`login.spec.ts` dan test sejenis) **WAJIB** berjalan tanpa session global.
+- Pada file login scenario, override `storageState` menjadi kosong agar flow login tetap tervalidasi end-to-end.
+
+## 🧰 RTK Usage Policy (Wajib)
+
+Jika project menyertakan RTK binary lokal, gunakan binary tersebut dan jangan asumsikan RTK terpasang global.
+
+- Path default Windows: `rtk-x86_64-pc-windows-msvc/rtk.exe`
+- Prioritaskan menjalankan via npm scripts project (contoh: `npm run rtk`, `npm run rtk:version`)
+- AI/agent **WAJIB** memprioritaskan RTK untuk setiap eksekusi command agar efisien token sesuai mekanisme RTK.
+- Untuk menjalankan command melalui RTK, gunakan pola:
+  - `npm run rtk -- <command>`
+  - Contoh: `npm run rtk -- playwright test`
+  - Contoh: `npm run rtk -- npm run test:e2e`
+- Dokumentasikan instruksi penggunaan RTK di `README.md`
+- Jika binary tidak ada, arahkan instalasi dari sumber resmi: `https://www.rtk-ai.app/`
+
+Catatan:
+- Binary `.exe` hanya berlaku untuk Windows.
+- Untuk non-Windows, gunakan binary sesuai OS terkait.
+- Jika command harus dijalankan langsung (mis. validasi environment/diagnostic tertentu), jelaskan alasan singkatnya.
+
+## 🧪 Playwright MCP Policy (Wajib)
+
+Untuk task browser automation, UI verification, dan debugging flow web, AI/agent **WAJIB**
+memprioritaskan Playwright MCP project-local.
+
+- Gunakan konfigurasi project: `mcp.playwright.json`
+- Jalankan server via script: `npm run mcp:playwright`
+- Gunakan session auth project: `playwright/.auth/user.json`
+- Jangan mengasumsikan Playwright MCP terinstall global
+
+Aturan pemakaian:
+- Task berbasis browser/UI: prioritaskan Playwright MCP.
+- Task command umum (build/test non-browser/diagnostic): tetap ikuti `RTK Usage Policy`.
+- Jika MCP tidak tersedia/bermasalah, jelaskan kendala singkat lalu gunakan fallback yang aman.
+
+## 📚 Context7 MCP Policy (Wajib)
+
+Untuk pertanyaan teknis terkait framework/library/API, AI/agent **WAJIB**
+memprioritaskan Context7 MCP agar referensi dokumentasi tetap terbaru.
+
+- Gunakan konfigurasi project: `mcp.playwright.json` (server `context7`)
+- Jalankan server via script: `npm run mcp:context7`
+- Jangan mengasumsikan Context7 MCP terpasang global
+- Jika butuh limit/akses tambahan, gunakan `CONTEXT7_API_KEY` di environment
+
+Aturan pemakaian:
+- Task dokumentasi API/library: prioritaskan Context7 MCP.
+- Task browser/UI flow: tetap prioritaskan Playwright MCP.
+- Task command umum: tetap ikuti `RTK Usage Policy`.
+- Jika Context7 tidak tersedia, jelaskan kendala singkat lalu gunakan fallback yang aman.
+
+---
 ## 📝 Coding Standards
 
 ### Penamaan (Naming Conventions)

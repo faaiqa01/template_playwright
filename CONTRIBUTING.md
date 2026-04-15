@@ -9,6 +9,14 @@ Sebelum berkontribusi, pastikan Anda telah:
 1. Membaca [SOUL.md](./SOUL.md) untuk memahami best practices
 2. Menginstall dependencies: `npm install`
 3. Menginstall browser: `npx playwright install`
+4. Jalankan template cleanup (Rule ID: `SOUL-TEMPLATE-CLEANUP-001`):
+   `npm run template:cleanup`
+5. (Windows) Jika menggunakan RTK, jalankan dari binary lokal project:
+   `npm run rtk:version`
+6. Jika mengerjakan task UI/browser, gunakan Playwright MCP project-local:
+   `npm run mcp:playwright`
+7. Jika mengerjakan task dokumentasi API/library, jalankan Context7 MCP:
+   `npm run mcp:context7`
 
 ## Development Workflow
 
@@ -48,6 +56,16 @@ npm run test:ui
 # Run dengan headed mode
 npm run test:headed
 ```
+
+Catatan auth:
+- Project ini menggunakan global login session (`tests/auth.setup.ts` + `storageState`).
+- Untuk test authenticated, hindari login ulang di setiap `beforeEach`.
+- Skenario login (`tests/e2e/login.spec.ts` dan sejenisnya) wajib berjalan tanpa session global.
+
+Catatan MCP:
+- Untuk automation/debugging berbasis browser, gunakan Playwright MCP dari project ini.
+- Untuk dokumentasi library/API terbaru, gunakan Context7 MCP dari project ini.
+- Konfigurasi keduanya ada di `mcp.playwright.json`.
 
 ### 4. Code Style
 
@@ -164,6 +182,26 @@ test('user can login', async ({ page }) => {
 ### Test Independence
 
 Setiap test harus bisa berjalan sendiri tanpa ketergantungan test lain.
+
+### Global Login Session
+
+Gunakan pola berikut saat menambah test baru:
+
+- Authenticated area (dashboard/profile/settings): gunakan session global yang sudah disiapkan.
+- Jangan duplikasi flow login di setiap test authenticated.
+- Login flow tests tetap dari state kosong (tanpa session global) agar validasi login tetap nyata.
+
+### Playwright MCP (Project Policy)
+
+- Prioritaskan Playwright MCP untuk task yang butuh interaksi browser/UI.
+- Jalankan dengan `npm run mcp:playwright`.
+- Jangan bergantung pada instalasi MCP global; gunakan konfigurasi project.
+
+### Context7 MCP (Project Policy)
+
+- Prioritaskan Context7 MCP untuk task referensi dokumentasi API/library.
+- Jalankan dengan `npm run mcp:context7`.
+- Jangan bergantung pada instalasi MCP global; gunakan konfigurasi project.
 
 ### Assertions
 

@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 
+const authFile = path.join(__dirname, 'playwright/.auth/user.json');
+
 /**
  * Playwright Configuration
  * 
@@ -75,29 +77,55 @@ export default defineConfig({
 
     // Configure projects for different browsers
     projects: [
+        // Setup project untuk membuat authenticated session
+        {
+            name: 'setup',
+            testMatch: /.*\.setup\.ts/,
+        },
+
         {
             name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
         },
 
         {
             name: 'firefox',
-            use: { ...devices['Desktop Firefox'] },
+            use: {
+                ...devices['Desktop Firefox'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
         },
 
         {
             name: 'webkit',
-            use: { ...devices['Desktop Safari'] },
+            use: {
+                ...devices['Desktop Safari'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
         },
 
         // Mobile configurations
         {
             name: 'Mobile Chrome',
-            use: { ...devices['Pixel 5'] },
+            use: {
+                ...devices['Pixel 5'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
         },
         {
             name: 'Mobile Safari',
-            use: { ...devices['iPhone 12'] },
+            use: {
+                ...devices['iPhone 12'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
         },
     ],
 
